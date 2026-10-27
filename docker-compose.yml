@@ -1,0 +1,136 @@
+x-airflow-common: &airflow-common
+  build: .
+  image: prueba-airflow:3.1.5
+  user: "${AIRFLOW_UID:-50000}:0"
+  env_file:
+    - .env
+  environment: &airflow-environment
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__AUTH_MANAGER: airflow.api_fastapi.auth.managers.simple.simple_auth_manager.SimpleAuthManager
+    AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: "${AIRFLOW_ADMIN_USER:-admin}:admin"
+    AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_PASSWORDS_FILE: /opt/airflow/config/simple_auth_manager_passwords.json
+    AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${AIRFLOW_DB_USER}:${AIRFLOW_DB_PASSWORD}@airflow-db:5432/${AIRFLOW_DB_NAME}
+    AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW_FERNET_KEY}
+    AIRFLOW__API__SECRET_KEY: ${AIRFLOW_API_SECRET_KEY}
+    AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW_JWT_SECRET}
+    AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-apiserver:8080/execution/
+    POSTGRES_HOST: postgres
+    POSTGRES_PORT: "5432"
+    POSTGRES_DB: ${POSTGRES_DB}
+    POSTGRES_USER: ${POSTGRES_USER}
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ETL_BATCH_SIZE: ${ETL_BATCH_SIZE:-5000}
+    ETL_SOURCE_TIMEZONE: ${ETL_SOURCE_TIMEZONE:-UTC}
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./:/opt/airflow/project
+    - ./config:/opt/airflow/config
+  restart: unless-stopped
+  depends_on:
+    postgres:
+      condition: service_healthy
+    airflow-db:
+      condition: service_healthy
+
+services:
+  # DataWarehouse
+  postgres:
+    image: postgres:16
+    container_name: datamart-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT:-55432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+   # Airflow metadatabase
+  airflow-db:
+    image: postgres:16
+    container_name: airflow-metadata-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${AIRFLOW_DB_NAME}
+      POSTGRES_USER: ${AIRFLOW_DB_USER}
+      POSTGRES_PASSWORD: ${AIRFLOW_DB_PASSWORD}
+    volumes:
+      - airflow_metadata_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+
+  airflow-init:
+    <<: *airflow-common
+    container_name: airflow-init
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-db:
+        condition: service_healthy
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        airflow db migrate
+        python /opt/airflow/config/init_airflow.py
+
+
+  airflow-apiserver:
+    <<: *airflow-common
+    container_name: datamart-airflow
+    command: api-server --host 0.0.0.0 --port 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        airflow dags unpause etl_datamart
+        airflow dags trigger etl_datamart
+        exec airflow scheduler
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+
+  airflow-dag-processor:
+    <<: *airflow-common
+    container_name: airflow-dag-processor
+    command: dag-processor
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-triggerer:
+    <<: *airflow-common
+    container_name: airflow-triggerer
+    command: triggerer
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+volumes:
+  postgres_data:
+  airflow_metadata_data:
