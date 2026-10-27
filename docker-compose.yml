@@ -81,13 +81,7 @@ services:
         condition: service_healthy
       airflow-db:
         condition: service_healthy
-    command:
-      - bash
-      - -c
-      - |
-        set -e
-        airflow db migrate
-        python /opt/airflow/config/init_airflow.py
+    command: scheduler
 
 
   airflow-apiserver:

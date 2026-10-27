@@ -1,0 +1,10 @@
+{"timestamp":"2026-10-27T17:05:33.399186Z","level":"info","event":"DAG bundles loaded: dags-folder","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2026-10-27T17:05:33.400180Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_datamart.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-10-27T17:05:33.820498Z","level":"warning","event":"Using Variable.get from `airflow.models` is deprecated.Please use `get` on Variable from sdk(`airflow.sdk.Variable`) instead","category":"DeprecationWarning","filename":"/home/airflow/.local/lib/python3.12/site-packages/airflow/models/variable.py","lineno":151,"logger":"py.warnings"}
+{"timestamp":"2026-10-27T17:05:33.841063Z","level":"warning","event":"Skipping masking for a secret as it's too short (<5 chars)","logger":"airflow.sdk._shared.secrets_masker.secrets_masker","filename":"secrets_masker.py","lineno":555}
+{"timestamp":"2026-10-27T17:05:33.842474Z","level":"warning","event":"Skipping masking for a secret as it's too short (<5 chars)","logger":"airflow._shared.secrets_masker.secrets_masker","filename":"secrets_masker.py","lineno":555}
+{"timestamp":"2026-10-27T17:05:35.126367Z","level":"info","event":"Source file: /opt/airflow/project/data/data.csv","logger":"task.stdout"}
+{"timestamp":"2026-10-27T17:05:35.127016Z","level":"info","event":"Extracted records: 541,909","logger":"task.stdout"}
+{"timestamp":"2026-10-27T17:05:35.127580Z","level":"info","event":"Batch size: 5000","logger":"task.stdout"}
+{"timestamp":"2026-10-27T17:05:35.127993Z","level":"info","event":"Staging file: /opt/airflow/project/data/airflow_staging/extracted_sales.pkl","logger":"task.stdout"}
+{"timestamp":"2026-10-27T17:05:35.141148Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator","filename":"python.py","lineno":217}

@@ -1,0 +1,7 @@
+{"timestamp":"2026-10-27T16:54:53.022896Z","level":"info","event":"DAG bundles loaded: dags-folder","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2026-10-27T16:54:53.023842Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_datamart.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-10-27T16:54:55.842889Z","level":"info","event":"Processed sales records: 536,641","logger":"task.stdout"}
+{"timestamp":"2026-10-27T16:54:55.843472Z","level":"info","event":"Daily product revenue rows: 278,011","logger":"task.stdout"}
+{"timestamp":"2026-10-27T16:54:55.844027Z","level":"info","event":"Valid records: 534,129","logger":"task.stdout"}
+{"timestamp":"2026-10-27T16:54:55.844796Z","level":"info","event":"Rejected records: 2,512","logger":"task.stdout"}
+{"timestamp":"2026-10-27T16:54:55.903025Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator","filename":"python.py","lineno":217}

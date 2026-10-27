@@ -41,11 +41,26 @@ def load_dataframe(dataframe: pd.DataFrame, table_name: str, if_exists: str = "a
     return len(records)
 
 
+
 def clear_target_tables(connection: Connection) -> None:
-    """Clear both target tables within the current transaction."""
-    connection.execute(
-        text(
-            "TRUNCATE TABLE "
-            "public.sales_records, public.daily_product_revenue"
+    """Clear existing target tables within the current transaction."""
+    from sqlalchemy import inspect
+
+    target_tables = [
+        "sales_records",
+        "daily_product_revenue",
+    ]
+
+    inspector = inspect(connection)
+
+    existing_tables = [
+        table
+        for table in target_tables
+        if inspector.has_table(table, schema="public")
+    ]
+
+    if existing_tables:
+        tables_sql = ", ".join(
+            f"public.{table}" for table in existing_tables
         )
-    )
+        connection.execute(text(f"TRUNCATE TABLE {tables_sql}"))
