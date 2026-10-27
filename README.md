@@ -1,4 +1,3 @@
-
 # Pipeline ETL con Apache Airflow y Data Warehouse
 
 ## Caso DataMart S.A.S.
@@ -71,6 +70,46 @@ El archivo original contiene **541.909 filas** y 8 columnas. Los archivos interm
 - Las transacciones con `CustomerID` ausente se conservan y se identifican con el indicador `customer_missing`.
 - Se calculan los importes brutos, los ajustes por devoluciones y el importe neto.
 - Se genera una agregación diaria por producto para apoyar las consultas analíticas.
+
+## Generar las claves secretas de Airflow
+
+Antes de iniciar Docker, genera valores secretos propios para estas variables del archivo `.env`:
+
+- `AIRFLOW_FERNET_KEY`: cifra información sensible almacenada por Airflow, como contraseñas de Connections.
+- `AIRFLOW_API_SECRET_KEY`: clave secreta usada por el API server de Airflow.
+- `AIRFLOW_JWT_SECRET`: clave secreta para firmar tokens JWT, si está configurada por el despliegue.
+
+**No uses `change_me` en un entorno real ni publiques estas claves en GitHub.** Cada persona o entorno debe generar sus propias claves y guardarlas únicamente en el archivo `.env`.
+
+### Opción recomendada: generar las claves desde PowerShell
+
+Con el entorno del proyecto activo y sus dependencias instaladas, ejecuta:
+
+```powershell
+uv run python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+```
+
+Copia el resultado y úsalo como valor de `AIRFLOW_FERNET_KEY`.
+
+Para generar las otras dos claves, ejecuta cada comando por separado:
+
+```powershell
+python -c "import secrets; print(secrets.token_hex(32))"
+```
+
+```powershell
+python -c "import secrets; print(secrets.token_hex(32))"
+```
+
+Copia un resultado distinto en cada variable:
+
+```dotenv
+AIRFLOW_FERNET_KEY=PEGA_AQUI_LA_CLAVE_FERNET_GENERADA
+AIRFLOW_API_SECRET_KEY=PEGA_AQUI_UNA_CLAVE_SECRETA_GENERADA
+AIRFLOW_JWT_SECRET=PEGA_AQUI_OTRA_CLAVE_SECRETA_GENERADA
+```
+
+No copies literalmente los textos `PEGA_AQUI...`: reemplázalos por los valores generados. Conserva las claves para futuros reinicios del mismo entorno; si cambias la Fernet key, Airflow podría no poder descifrar credenciales que ya guardó. Comprueba también que `.env` esté incluido en `.gitignore`.
 
 ## 6. Configuración
 
