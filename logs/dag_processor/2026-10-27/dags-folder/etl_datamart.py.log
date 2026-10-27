@@ -309,3 +309,11 @@
 {"timestamp":"2026-10-27T16:20:23.462280Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_datamart.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
 {"timestamp":"2026-10-27T16:20:54.096803Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_datamart.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
 {"timestamp":"2026-10-27T16:21:24.721911Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_datamart.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-10-27T16:21:55.319796Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_datamart.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-10-27T16:22:25.900756Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_datamart.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-10-27T16:22:56.512725Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_datamart.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-10-27T16:23:27.090246Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_datamart.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-10-27T16:23:57.707712Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_datamart.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-10-27T16:24:28.297223Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_datamart.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-10-27T16:24:58.892240Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_datamart.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-10-27T16:25:29.505274Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/etl_datamart.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
